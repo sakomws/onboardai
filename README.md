@@ -5,6 +5,7 @@ This is Employee Assistant built at AgiHouse hackathon.
 # Architecture
 ![OnboardAI](img/architecture.jpg?raw=true "Architecture")
 
+[Link to presentation.](OnboardAI.pdf)
 
 # Install Backend
 1. Set the secrets:

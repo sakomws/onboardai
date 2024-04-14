@@ -1,6 +1,9 @@
 # OnboardAI
 
-This is Employee Assistant built at AgiHouse hackathon 
+# Architecture
+![OnboardAI](img/architecture.jpg?raw=true "Architecture")
+
+This is Employee Assistant built at AgiHouse hackathon.
 # Install Backend
 1. Set the secrets:
 ```

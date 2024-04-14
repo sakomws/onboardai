@@ -6,13 +6,12 @@ from typing import Optional
 from livekit import agents, rtc
 from livekit.plugins import openai, silero
 
-import vectara
-import heropdf
+import tune_runner
 
-class TenantHero:
+class OnboardAI:
     @classmethod
     async def create(cls, ctx: agents.JobContext):
-        agent = TenantHero(ctx)
+        agent = OnboardAI(ctx)
         await agent.start()
 
     def __init__(self, ctx: agents.JobContext):
@@ -48,7 +47,7 @@ class TenantHero:
         # create_task is used to run coroutines in the background
         self.ctx.create_task(
             self.chat.send_message(
-                "Welcome to the Tenant Hero Assistant! Speak with me anything related to Tenant LAWs."
+                "My name  is Koro, your Onboarding Concierge! How can I help you today?"
             )
         )
 
@@ -91,25 +90,16 @@ class TenantHero:
                 self.update_agent_state("generating")
                 self.ctx.create_task(
                     self.chat.send_message(
-                        f'Loading Tenant Hero for: "{prompt}"'
+                        f'Loading OnboardAI for: "{prompt}"'
                     )
                 )
                 started_at = datetime.now()
                 try:
-                   reply=vectara.get_query_from_user(prompt)
+                   reply=tune_runner.get_query_from_user(prompt)
                    print("HERE IS RESPONSE:",reply)
-                   search_string = "create pdf" 
-                   if search_string in prompt.lower():
-                          print("Creating PDF")
-                          response=heropdf.create_pdf(reply)
-                          print(response)
-                          self.ctx.create_task(
-                            self.chat.send_message(f'Generating PDF to send via email for below request: "{reply}"')
-                        )
-                   else:
-                        self.ctx.create_task(
+                   self.ctx.create_task(
                             self.chat.send_message(f'"{reply}"')
-                        )
+                    )
                 except Exception as e:
                     logging.error("failed to generate image: %s", e, exc_info=e)
                     self.ctx.create_task(
@@ -125,9 +115,9 @@ if __name__ == "__main__":
 
     async def job_request_cb(job_request: agents.JobRequest):
         await job_request.accept(
-            TenantHero.create,
-            identity="Tenant Hero",
-            name="Tenant Hero",
+            OnboardAI.create,
+            identity="OnboardAI",
+            name="OnboardAI",
             # subscribe to all audio tracks automatically
             auto_subscribe=agents.AutoSubscribe.AUDIO_ONLY,
             # disconnect when the last participant leaves

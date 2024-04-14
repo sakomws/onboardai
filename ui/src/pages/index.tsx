@@ -85,13 +85,13 @@ export default function Home({fileNames}) {
     }
     if (!customToken && tokenOptions.userInfo?.identity) {
       md.push({
-        name: "Tenant Name: ",
-        value: "John Doe",
+        name: "Employee Name: ",
+        value: "Sako M.",
       });
-      md.push({ name: "House Address: ", value: "2515 Mardell Way" });
+      md.push({ name: "Position name: ", value: "Staff Software Engineer" });
       md.push({
-        name: "Landlord Name: ",
-        value: "Sako Properties",
+        name: "Team Name: ",
+        value: "Platform Team",
       });
     }
     setMetadata(md);

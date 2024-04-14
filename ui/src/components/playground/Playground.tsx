@@ -49,7 +49,6 @@ export interface PlaygroundMeta {
 
 
 export interface PlaygroundProps {
-  logo?: ReactNode;
   title?: string;
   githubLink?: string;
   description?: ReactNode;
@@ -66,7 +65,6 @@ export interface PlaygroundProps {
 const headerHeight = 56;
 
 export default function Playground({
-  logo,
   title,
   githubLink,
   description,
@@ -77,14 +75,12 @@ export default function Playground({
   onConnect,
   metadata,
   videoFit,
-  files
 }: PlaygroundProps) {
   const [agentState, setAgentState] = useState<AgentState>("offline");
   const [themeColor, setThemeColor] = useState(defaultColor);
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [transcripts, setTranscripts] = useState<ChatMessageType[]>([]);
   const { localParticipant } = useLocalParticipant();
-  const [fileNames, setFileNames] = useState(files);
   
   const participants = useRemoteParticipants({
     updateOnlyOn: [RoomEvent.ParticipantMetadataChanged],
@@ -209,21 +205,7 @@ export default function Playground({
 
   useDataChannel(onDataReceived);
 
-  
-  const pdfTileContent =  useMemo(() => {
-    return (
-      <div class="flex flex-col text-lg text-gray-800 w-full gap-3">
-        { fileNames.map((file,index) => (
-        <div class="p-4 flex flex-col rounded shadow border w-full">
-            <a href={`/pdfs/${file}`} target="_top">
-            <div>{file}</div>
-        <div class="text-sm text-gray-600"></div>
-        </a>
-            </div>
-        ))}
-      </div>
-    )
-  })
+
 
     const videoTileContent = useMemo(() => {
     const videoFitClassName = `object-${videoFit}`;
@@ -287,7 +269,7 @@ export default function Playground({
           </ConfigurationPanelItem>
         )}
 
-        <ConfigurationPanelItem title="Property Details">
+        <ConfigurationPanelItem title="Employee Details">
           <div className="flex flex-col gap-2">
             {metadata?.map((data, index) => (
               <NameValueRow
@@ -299,10 +281,10 @@ export default function Playground({
             ))}
           </div>
         </ConfigurationPanelItem>
-        <ConfigurationPanelItem title="Tenant Hero Status">
+        <ConfigurationPanelItem title="OnboardAI Status">
           <div className="flex flex-col gap-2">
             <NameValueRow
-              name="Tenant Hero connected"
+              name="OnboardAI connected"
               value={
                 roomState === ConnectionState.Connecting ? (
                   <LoadingSVG diameter={16} strokeWidth={2} />
@@ -317,7 +299,7 @@ export default function Playground({
               }
             />
             <NameValueRow
-              name="Tenant Hero connected"
+              name="OnboardAI connected"
               value={
                 isAgentConnected ? (
                   "true"
@@ -330,7 +312,7 @@ export default function Playground({
               valueColor={isAgentConnected ? `${themeColor}-500` : "gray-500"}
             />
             <NameValueRow
-              name="Tenant Hero status"
+              name="OnboardAI status"
               value={
                 agentState !== "offline" && agentState !== "speaking" ? (
                   <div className="flex gap-2 items-center">
@@ -368,17 +350,7 @@ export default function Playground({
             <AudioInputTile frequencies={localMultibandVolume} />
           </ConfigurationPanelItem>
         )}
-        <div className="w-full">
-          <ConfigurationPanelItem title="Color">
-            <ColorPicker
-              colors={themeColors}
-              selectedColor={themeColor}
-              onSelect={(color) => {
-                setThemeColor(color);
-              }}
-            />
-          </ConfigurationPanelItem>
-        </div>
+
         {showQR && (
           <div className="w-full">
             <ConfigurationPanelItem title="QR Code">
@@ -456,7 +428,6 @@ export default function Playground({
     <>
       <PlaygroundHeader
         title={title}
-        logo={logo}
         githubLink={githubLink}
         height={headerHeight}
         accentColor={themeColor}
@@ -475,17 +446,6 @@ export default function Playground({
             tabs={mobileTabs}
             initialTab={mobileTabs.length - 1}
           />
-        </div>
-        <div
-          className={`flex-col basis-1/3 gap-4 h-full hidden lg:flex`}
-        >
-            <PlaygroundTile
-              title="PDFs"
-              className="w-full h-full grow justify-start"
-              childrenClassName="justify-start"
-            >
-              {pdfTileContent}
-            </PlaygroundTile>
         </div>
 
         {outputs?.includes(PlaygroundOutputs.Chat) && (
